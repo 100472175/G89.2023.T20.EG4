@@ -113,42 +113,57 @@ class OrderManager:
 
 
     #pylint: disable=too-many-arguments
-    def register_order( self, product_id,
+    def register_order(self, product_id,
                         order_type,
                         address,
                         phone_number,
-                        zip_code ):
+                        zip_code):
         """Register the orders into the order's file"""
 
-        my_order_type_re = re.compile(r"(Regular|Premium)")
-        res = my_order_type_re.fullmatch(order_type)
-        if not res:
-            raise OrderManagementException ("order_type is not valid")
+        self.validate_register_order_parameters(address=address, order_type=order_type,
+                                                phone_number=phone_number, zip_code=zip_code)
 
-        my_address_re = re.compile(r"^(?=^.{20,100}$)(([a-zA-Z0-9]+\s)+[a-zA-Z0-9]+)$")
-        res = my_address_re.fullmatch(address)
-        if not res:
-            raise OrderManagementException ("address is not valid")
+        if self.validate_ean13(ean13=product_id):
+            my_order = OrderRequest(product_id= product_id,
+                                    order_type= order_type,
+                                    delivery_address= address,
+                                    phone_number= phone_number,
+                                    zip_code= zip_code)
 
-        my_phone_number_re = re.compile(r"^(\+)[0-9]{11}")
-        res = my_phone_number_re.fullmatch(phone_number)
-        if not res:
-            raise OrderManagementException ("phone number is not valid")
+        self.save_store(data=my_order)
+
+        return my_order.order_id
+
+    def validate_register_order_parameters(self, address, order_type, phone_number, zip_code):
+        self.validate_order_type(order_type)
+        self.validate_delivery_address(address)
+        self.validate_phone_number(phone_number)
+        self.validate_zip_code(zip_code)
+
+    def validate_zip_code(self, zip_code):
         if zip_code.isnumeric() and len(zip_code) == 5:
             if (int(zip_code) > 52999 or int(zip_code) < 1000):
                 raise OrderManagementException("zip_code is not valid")
         else:
             raise OrderManagementException("zip_code format is not valid")
-        if self.validate_ean13(product_id):
-            my_order = OrderRequest(product_id,
-                                    order_type,
-                                    address,
-                                    phone_number,
-                                    zip_code)
 
-        self.save_store(my_order)
+    def validate_phone_number(self, phone_number):
+        my_phone_number_re = re.compile(r"^(\+)[0-9]{11}")
+        res = my_phone_number_re.fullmatch(phone_number)
+        if not res:
+            raise OrderManagementException("phone number is not valid")
 
-        return my_order.order_id
+    def validate_delivery_address(self, address):
+        my_address_re = re.compile(r"^(?=^.{20,100}$)(([a-zA-Z0-9]+\s)+[a-zA-Z0-9]+)$")
+        res = my_address_re.fullmatch(address)
+        if not res:
+            raise OrderManagementException("address is not valid")
+
+    def validate_order_type(self, order_type):
+        my_order_type_re = re.compile(r"(Regular|Premium)")
+        res = my_order_type_re.fullmatch(order_type)
+        if not res:
+            raise OrderManagementException("order_type is not valid")
 
     #pylint: disable=too-many-locals
     def send_product (self, input_file):
