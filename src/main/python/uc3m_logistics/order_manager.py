@@ -9,63 +9,14 @@ from .order_request import OrderRequest
 from .order_management_exception import OrderManagementException
 from .order_shipping import OrderShipping
 from .order_manager_config import JSON_FILES_PATH
-
+from .Stores import Stores
 
 class OrderManager:
     """Class for providing the methods for managing the orders process"""
 
     def __init__(self):
-        pass
-
-    @staticmethod
-    def validate_tracking_code(t_c):
-        """Method for validating sha256 values"""
-        my_tracking_code = re.compile(r"[0-9a-fA-F]{64}$")
-        res = my_tracking_code.fullmatch(t_c)
-        if not res:
-            raise OrderManagementException("tracking_code format is not valid")
-
-    @staticmethod
-    def save_store(data):
-        """Method for saving the orders store"""
-
-        # Read the JSON
-        file_store = JSON_FILES_PATH + "orders_store.json"
-        my_json = JSON()
-        data_list = my_json.read_json_register_order(file_store)
-
-        found = False
-        for item in data_list:
-            if item["_OrderRequest__order_id"] == data.order_id:
-                found = True
-        if not found:
-            data_list.append(data.__dict__)
-        else:
-            raise OrderManagementException("order_id is already registered in orders_store")
-        return my_json.write_json(file_store, data_list)
-
-    @staticmethod
-    def save_fast(data):
-        """Method for saving the orders store"""
-        orders_store = JSON_FILES_PATH + "orders_store.json"
-        with open(orders_store, "r+", encoding="utf-8", newline="") as file:
-            data_list = json.load(file)
-            data_list.append(data.__dict__)
-            file.seek(0)
-            json.dump(data_list, file, indent=2)
-
-    @staticmethod
-    def save_orders_shipped(shipment):
-        """Saves the shipping object into a file"""
-        # Read the file
-        shipments_store_file = JSON_FILES_PATH + "shipments_store.json"
-        my_json = JSON()
-        data_list = my_json.read_json_register_order(shipments_store_file)
-
-        # append the shipments list
-        data_list.append(shipment.__dict__)
-
-        my_json.write_json(shipments_store_file, data_list)
+        self.__my_json = JSON()
+        self.__my_store = Stores()
 
     # pylint: disable=too-many-arguments
     def register_order(self, product_id,
@@ -81,22 +32,21 @@ class OrderManager:
                                 phone_number=phone_number,
                                 zip_code=zip_code)
 
-        self.save_store(data=my_order)
+        self.__my_store.robust_saving(my_order)
 
         return my_order.order_id
 
     # pylint: disable=too-many-locals
     def send_product(self, input_file):
         """Sends the order included in the input_file"""
-        my_json = JSON()
-        data = my_json.read_json_send_product(input_file)
+        data = self.__my_json.read_json_send_product(input_file)
 
         # check all the information
         self.check_order_id(data)
         self.check_email(data)
 
         file_store = JSON_FILES_PATH + "orders_store.json"
-        data_list = my_json.read_json_register_order(file_store)
+        data_list = self.__my_json.read_json_register_order(file_store)
         found = False
         found, proid, reg_type = self.order_object_generator(data, data_list, found)
 
@@ -108,7 +58,8 @@ class OrderManager:
                                 order_type=reg_type,
                                 delivery_email=data["ContactEmail"])
 
-        self.save_orders_shipped(my_sign)
+        my_store = Stores()
+        my_store.robust_order_shipping_saving(my_sign)
 
         return my_sign.tracking_code
 
@@ -152,6 +103,13 @@ class OrderManager:
         except KeyError as ex:
             raise OrderManagementException("Bad label") from ex
 
+    @staticmethod
+    def validate_tracking_code(t_c):
+        """Method for validating sha256 values"""
+        my_tracking_code = re.compile(r"[0-9a-fA-F]{64}$")
+        if not my_tracking_code.fullmatch(t_c):
+            raise OrderManagementException("tracking_code format is not valid")
+
     def deliver_product(self, tracking_code):
         """Register the delivery of the product"""
         self.validate_tracking_code(tracking_code)
@@ -159,8 +117,7 @@ class OrderManager:
         # check if this tracking_code is in shipments_store
         shimpents_store_file = JSON_FILES_PATH + "shipments_store.json"
         # first read the file
-        my_json = JSON()
-        data_list = my_json.read_json_deliver_product(shimpents_store_file)
+        data_list = self.__my_json.read_json_deliver_product(shimpents_store_file)
         # search this tracking_code
         found = False
         for item in data_list:
@@ -177,9 +134,9 @@ class OrderManager:
 
         shipments_file = JSON_FILES_PATH + "shipments_delivered.json"
 
-        data_list = my_json.read_json_register_order(shipments_file)
+        data_list = self.__my_json.read_json_register_order(shipments_file)
 
             # append the delivery info
         data_list.append(str(tracking_code))
         data_list.append(str(datetime.utcnow()))
-        return my_json.write_json(shipments_file,data_list)
+        return self.__my_json.write_json(shipments_file,data_list)
