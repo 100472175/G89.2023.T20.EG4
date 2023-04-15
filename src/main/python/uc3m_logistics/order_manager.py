@@ -3,12 +3,12 @@ import datetime
 import re
 from datetime import datetime
 from freezegun import freeze_time
-from uc3m_logistics.stores.JSONS import JSON
+from uc3m_logistics.stores.jsons_manager import JSON
+from uc3m_logistics.stores.stores import Stores
 from .order_request import OrderRequest
 from .order_management_exception import OrderManagementException
 from .order_shipping import OrderShipping
 from .order_manager_config import JSON_FILES_PATH
-from uc3m_logistics.stores.Stores import Stores
 
 class OrderManager:
     """Class for providing the methods for managing the orders process"""
@@ -63,6 +63,7 @@ class OrderManager:
         return my_sign.tracking_code
 
     def order_object_generator(self, data, data_list, found):
+        """Generates the order object"""
         for item in data_list:
             if item["_OrderRequest__order_id"] == data["OrderID"]:
                 found = True
@@ -86,6 +87,7 @@ class OrderManager:
         return found, proid, reg_type
 
     def check_email(self, data):
+        """Method for checking the email format"""
         try:
             regex_email = r'^[a-z0-9]+([\._]?[a-z0-9]+)+[@](\w+[.])+\w{2,3}$'
             my_email_re = re.compile(regex_email)
@@ -95,6 +97,7 @@ class OrderManager:
             raise OrderManagementException("Bad label") from ex
 
     def check_order_id(self, data):
+        """Method for checking the order_id format"""
         try:
             my_order_id_re = re.compile(r"[0-9a-fA-F]{32}$")
             if not my_order_id_re.fullmatch(data["OrderID"]):
@@ -130,6 +133,7 @@ class OrderManager:
         return self.__my_json.write_json(shipments_file,data_list)
 
     def get_tracking_code_datetime(self, data_list, tracking_code):
+        """Method for getting the tracking code and the datetime"""
         found = False
         for item in data_list:
             if item["_OrderShipping__tracking_code"] == tracking_code:

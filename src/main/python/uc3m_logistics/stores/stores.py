@@ -1,9 +1,11 @@
+"""Stores class"""
 import json
 from uc3m_logistics.order_manager_config import JSON_FILES_PATH
 from uc3m_logistics.order_management_exception import OrderManagementException
-from .JSONS import JSON
+from .jsons_manager import JSON
 
 class Stores:
+    """Stores class"""
     def __init__(self):
         pass
 
