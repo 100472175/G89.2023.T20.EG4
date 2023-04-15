@@ -4,6 +4,7 @@ import re
 import json
 from datetime import datetime
 from freezegun import freeze_time
+from .JSONS import JSON
 from .order_request import OrderRequest
 from .order_management_exception import OrderManagementException
 from .order_shipping import OrderShipping
@@ -51,17 +52,12 @@ class OrderManager:
 
     @staticmethod
     def save_store(data):
-        """Medthod for saving the orders store"""
+        """Method for saving the orders store"""
+
+        # Read the JSON
         file_store = JSON_FILES_PATH + "orders_store.json"
-        #first read the file
-        try:
-            with open(file_store, "r", encoding="utf-8", newline="") as file:
-                data_list = json.load(file)
-        except FileNotFoundError:
-            # file is not found , so  init my data_list
-            data_list = []
-        except json.JSONDecodeError as ex:
-            raise OrderManagementException("JSON Decode Error - Wrong JSON Format") from ex
+        my_json = JSON()
+        data_list = my_json.read_json_register_order(file_store)
 
         found = False
         for item in data_list:
@@ -91,16 +87,10 @@ class OrderManager:
     @staticmethod
     def save_orders_shipped(shipment):
         """Saves the shipping object into a file"""
+        # Read the file
         shipments_store_file = JSON_FILES_PATH + "shipments_store.json"
-        # first read the file
-        try:
-            with open(shipments_store_file, "r", encoding="utf-8", newline="") as file:
-                data_list = json.load(file)
-        except FileNotFoundError:
-            # file is not found , so  init my data_list
-            data_list = []
-        except json.JSONDecodeError as ex:
-            raise OrderManagementException("JSON Decode Error - Wrong JSON Format") from ex
+        my_json = JSON()
+        data_list = my_json.read_json_register_order(shipments_store_file)
 
         #append the shipments list
         data_list.append(shipment.__dict__)
@@ -149,33 +139,24 @@ class OrderManager:
 
     def validate_phone_number(self, phone_number):
         my_phone_number_re = re.compile(r"^(\+)[0-9]{11}")
-        res = my_phone_number_re.fullmatch(phone_number)
-        if not res:
+        if not my_phone_number_re.fullmatch(phone_number):
             raise OrderManagementException("phone number is not valid")
 
     def validate_delivery_address(self, address):
         my_address_re = re.compile(r"^(?=^.{20,100}$)(([a-zA-Z0-9]+\s)+[a-zA-Z0-9]+)$")
-        res = my_address_re.fullmatch(address)
-        if not res:
+        if not my_address_re.fullmatch(address):
             raise OrderManagementException("address is not valid")
 
     def validate_order_type(self, order_type):
         my_order_type_re = re.compile(r"(Regular|Premium)")
-        res = my_order_type_re.fullmatch(order_type)
-        if not res:
+        if not my_order_type_re.fullmatch(order_type):
             raise OrderManagementException("order_type is not valid")
 
     #pylint: disable=too-many-locals
     def send_product (self, input_file):
         """Sends the order included in the input_file"""
-        try:
-            with open(input_file, "r", encoding="utf-8", newline="") as file:
-                data = json.load(file)
-        except FileNotFoundError as ex:
-            # file is not found
-            raise OrderManagementException("File is not found") from ex
-        except json.JSONDecodeError as ex:
-            raise OrderManagementException("JSON Decode Error - Wrong JSON Format") from ex
+        my_json = JSON()
+        data = my_json.read_json_send_product(input_file)
 
         #check all the information
         try:

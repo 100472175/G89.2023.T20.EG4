@@ -2,7 +2,8 @@
 import hashlib
 import json
 from datetime import datetime
-
+# NEW IMPORT TO VALIDATE VALUES
+from .order_type_attribute import OrderTypeAttribute
 class OrderRequest:
     """Class representing the register of the order in the system"""
     #pylint: disable=too-many-arguments
@@ -34,20 +35,23 @@ class OrderRequest:
     def order_type( self ):
         """Property representing the type of order: REGULAR or PREMIUM"""
         return self.__order_type
+
+    # NEW IMPORT TO VALIDATE ITSELF
     @order_type.setter
-    def order_type( self, value ):
-        self.__order_type = value
+    def order_type(self, value):
+        my_order_type = OrderTypeAttribute()
+        self.__order_type = my_order_type.validate(value)
 
     @property
-    def phone_number( self ):
+    def phone_number(self):
         """Property representing the clients's phone number"""
         return self.__phone_number
     @phone_number.setter
-    def phone_number( self, value ):
+    def phone_number(self, value):
         self.__phone_number = value
 
     @property
-    def product_id( self ):
+    def product_id(self):
         """Property representing the products  EAN13 code"""
         return self.__product_id
     @product_id.setter
