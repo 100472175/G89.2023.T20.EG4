@@ -6,8 +6,10 @@ from .order_management_exception import OrderManagementException
 # Imports for validating parameters
 from .order_type_attribute import OrderTypeAttribute
 from .zip_code_attribute import ZipCodeAttribute
+from .phone_number_attribute import PhoneNumberAttribute
 from .product_id_attribute import ProductIdAttribute
 from .address_attribute import AddressAttribute
+
 class OrderRequest:
     """Class representing the register of the order in the system"""
 
@@ -52,7 +54,7 @@ class OrderRequest:
 
     @phone_number.setter
     def phone_number(self, value):
-        self.__phone_number = value
+        self.__phone_number = PhoneNumberAttribute().validate(value)
 
     @property
     def product_id(self):
