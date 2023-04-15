@@ -41,8 +41,7 @@ class OrderRequest:
 
     @order_type.setter
     def order_type(self, value):
-        OrderTypeAttribute().validate(value)
-        self.__order_type = value
+        self.__order_type = OrderTypeAttribute().validate(value)
 
     @property
     def phone_number(self):
