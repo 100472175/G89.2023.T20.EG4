@@ -93,24 +93,13 @@ class OrderManager:
 
 
         #check all the information
-        try:
-            my_order_id_re = re.compile(r"[0-9a-fA-F]{32}$")
-            if not my_order_id_re.fullmatch(data["OrderID"]):
-                raise OrderManagementException("order id is not valid")
-        except KeyError as ex:
-            raise OrderManagementException("Bad label") from ex
+        self.check_order_id(data)
 
-        try:
-            regex_email = r'^[a-z0-9]+([\._]?[a-z0-9]+)+[@](\w+[.])+\w{2,3}$'
-            my_email_re = re.compile(regex_email)
-            if not my_email_re.fullmatch(data["ContactEmail"]):
-                raise OrderManagementException("contact email is not valid")
-        except KeyError as ex:
-            raise OrderManagementException("Bad label") from ex
+        self.check_email(data)
+
         file_store = JSON_FILES_PATH + "orders_store.json"
 
-        with open(file_store, "r", encoding="utf-8", newline="") as file:
-            data_list = json.load(file)
+        data_list = my_json.read_json_register_order(file_store)
         found = False
         for item in data_list:
             if item["_OrderRequest__order_id"] == data["OrderID"]:
@@ -146,6 +135,23 @@ class OrderManager:
         self.save_orders_shipped(my_sign)
 
         return my_sign.tracking_code
+
+    def check_email(self, data):
+        try:
+            regex_email = r'^[a-z0-9]+([\._]?[a-z0-9]+)+[@](\w+[.])+\w{2,3}$'
+            my_email_re = re.compile(regex_email)
+            if not my_email_re.fullmatch(data["ContactEmail"]):
+                raise OrderManagementException("contact email is not valid")
+        except KeyError as ex:
+            raise OrderManagementException("Bad label") from ex
+
+    def check_order_id(self, data):
+        try:
+            my_order_id_re = re.compile(r"[0-9a-fA-F]{32}$")
+            if not my_order_id_re.fullmatch(data["OrderID"]):
+                raise OrderManagementException("order id is not valid")
+        except KeyError as ex:
+            raise OrderManagementException("Bad label") from ex
 
     def deliver_product(self, tracking_code):
         """Register the delivery of the product"""

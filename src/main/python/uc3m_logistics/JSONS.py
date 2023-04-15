@@ -1,4 +1,3 @@
-import re
 import json
 from .order_management_exception import OrderManagementException
 
