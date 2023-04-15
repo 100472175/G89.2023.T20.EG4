@@ -1,6 +1,6 @@
 import json
-from .order_manager_config import JSON_FILES_PATH
-from .order_management_exception import OrderManagementException
+from uc3m_logistics.order_manager_config import JSON_FILES_PATH
+from uc3m_logistics.order_management_exception import OrderManagementException
 from .JSONS import JSON
 
 class Stores:

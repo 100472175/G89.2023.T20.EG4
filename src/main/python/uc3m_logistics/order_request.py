@@ -3,11 +3,11 @@ import hashlib
 import json
 from datetime import datetime
 # Imports for validating parameters
-from .order_type_attribute import OrderTypeAttribute
-from .zip_code_attribute import ZipCodeAttribute
-from .phone_number_attribute import PhoneNumberAttribute
-from .product_id_attribute import ProductIdAttribute
-from .address_attribute import AddressAttribute
+from uc3m_logistics.attributes.order_type_attribute import OrderTypeAttribute
+from uc3m_logistics.attributes.zip_code_attribute import ZipCodeAttribute
+from uc3m_logistics.attributes.phone_number_attribute import PhoneNumberAttribute
+from uc3m_logistics.attributes.product_id_attribute import ProductIdAttribute
+from uc3m_logistics.attributes.address_attribute import AddressAttribute
 
 class OrderRequest:
     """Class representing the register of the order in the system"""

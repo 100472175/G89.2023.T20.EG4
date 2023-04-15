@@ -1,7 +1,7 @@
 """Contains the class OrderShipping"""
 from datetime import datetime
 import hashlib
-from .product_id_attribute import ProductIdAttribute
+from uc3m_logistics.attributes.product_id_attribute import ProductIdAttribute
 
 
 

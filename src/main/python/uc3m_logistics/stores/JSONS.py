@@ -1,5 +1,5 @@
 import json
-from .order_management_exception import OrderManagementException
+from uc3m_logistics.order_management_exception import OrderManagementException
 
 class JSON:
     def __init__(self):

@@ -1,15 +1,14 @@
 """Module """
 import datetime
 import re
-import json
 from datetime import datetime
 from freezegun import freeze_time
-from .JSONS import JSON
+from uc3m_logistics.stores.JSONS import JSON
 from .order_request import OrderRequest
 from .order_management_exception import OrderManagementException
 from .order_shipping import OrderShipping
 from .order_manager_config import JSON_FILES_PATH
-from .Stores import Stores
+from uc3m_logistics.stores.Stores import Stores
 
 class OrderManager:
     """Class for providing the methods for managing the orders process"""
