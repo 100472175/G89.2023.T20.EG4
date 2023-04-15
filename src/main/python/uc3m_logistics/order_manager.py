@@ -128,7 +128,7 @@ class OrderManager:
         self.validate_order_type(order_type)
         self.validate_delivery_address(address)
         self.validate_phone_number(phone_number)
-        self.validate_zip_code(zip_code)
+        # self.validate_zip_code(zip_code)
 
     def validate_zip_code(self, zip_code):
         if zip_code.isnumeric() and len(zip_code) == 5:

@@ -3,8 +3,9 @@ import hashlib
 import json
 from datetime import datetime
 from .order_management_exception import OrderManagementException
+# Imports for validating parameters
 from .order_type_attribute import OrderTypeAttribute
-
+from .zip_code_attribute import ZipCodeAttribute
 
 class OrderRequest:
     """Class representing the register of the order in the system"""
@@ -78,4 +79,4 @@ class OrderRequest:
 
     @zip_code.setter
     def zip_code(self, value):
-        self.__zip_code = value
+        self.__zip_code = ZipCodeAttribute().validate(value)
