@@ -15,32 +15,6 @@ class OrderManager:
     def __init__(self):
         pass
 
-    @staticmethod
-    def validate_ean13(ean13):
-        """method vor validating a ean13 code"""
-        # PLEASE INCLUDE HERE THE CODE FOR VALIDATING THE EAN13
-        # RETURN TRUE IF THE EAN13 IS RIGHT, OR FALSE IN OTHER CASE
-        checksum = 0
-        code_read = -1
-        regex_ean13 = re.compile("^[0-9]{13}$")
-        valid_ean13_format = regex_ean13.fullmatch(ean13)
-        if valid_ean13_format is None:
-            raise OrderManagementException("Invalid EAN13 code string")
-
-        for i, digit in enumerate(reversed(ean13)):
-            try:
-                current_digit = int(digit)
-            except ValueError as v_e:
-                raise OrderManagementException("Invalid EAN13 code string") from v_e
-            if i == 0:
-                code_read = current_digit
-            else:
-                checksum += (current_digit) * 3 if (i % 2 != 0) else current_digit
-        control_digit = (10 - (checksum % 10)) % 10
-
-        if (code_read != -1) and (code_read == control_digit):
-            return True
-        raise OrderManagementException("Invalid EAN13 control digit")
 
     @staticmethod
     def validate_tracking_code(t_c):
@@ -113,19 +87,19 @@ class OrderManager:
         self.validate_register_order_parameters(address=address, order_type=order_type,
                                                 phone_number=phone_number, zip_code=zip_code)
 
-        if self.validate_ean13(ean13=product_id):
-            my_order = OrderRequest(product_id= product_id,
-                                    order_type= order_type,
-                                    delivery_address= address,
-                                    phone_number= phone_number,
-                                    zip_code= zip_code)
+
+        my_order = OrderRequest(product_id= product_id,
+                                order_type= order_type,
+                                delivery_address= address,
+                                phone_number= phone_number,
+                                zip_code= zip_code)
 
         self.save_store(data=my_order)
 
         return my_order.order_id
 
     def validate_register_order_parameters(self, address, order_type, phone_number, zip_code):
-        self.validate_order_type(order_type)
+        #self.validate_order_type(order_type)
         self.validate_delivery_address(address)
         self.validate_phone_number(phone_number)
         # self.validate_zip_code(zip_code)

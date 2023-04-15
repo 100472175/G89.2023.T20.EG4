@@ -6,7 +6,7 @@ from .order_management_exception import OrderManagementException
 # Imports for validating parameters
 from .order_type_attribute import OrderTypeAttribute
 from .zip_code_attribute import ZipCodeAttribute
-
+from .product_id_attribute import ProductIdAttribute
 class OrderRequest:
     """Class representing the register of the order in the system"""
 
@@ -60,7 +60,7 @@ class OrderRequest:
 
     @product_id.setter
     def product_id(self, value):
-        self.__product_id = value
+        self.__product_id = ProductIdAttribute().validate(value)
 
     @property
     def time_stamp(self):
