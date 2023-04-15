@@ -26,6 +26,16 @@ class JSON:
             raise OrderManagementException("JSON Decode Error - Wrong JSON Format") from ex
         return data
 
+    def read_json_deliver_product(self,file):
+        try:
+            with open(file, "r", encoding="utf-8", newline="") as f:
+                data_list = json.load(f)
+        except json.JSONDecodeError as ex:
+            raise OrderManagementException("JSON Decode Error - Wrong JSON Format") from ex
+        except FileNotFoundError as ex:
+            raise OrderManagementException("shipments_store not found") from ex
+        return data_list
+
     def write_json(self,file,content):
         try:
             with open(file, "w", encoding="utf-8", newline="") as f:

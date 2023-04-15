@@ -159,13 +159,8 @@ class OrderManager:
         # check if this tracking_code is in shipments_store
         shimpents_store_file = JSON_FILES_PATH + "shipments_store.json"
         # first read the file
-        try:
-            with open(shimpents_store_file, "r", encoding="utf-8", newline="") as file:
-                data_list = json.load(file)
-        except json.JSONDecodeError as ex:
-            raise OrderManagementException("JSON Decode Error - Wrong JSON Format") from ex
-        except FileNotFoundError as ex:
-            raise OrderManagementException("shipments_store not found") from ex
+        my_json = JSON()
+        data_list = my_json.read_json_deliver_product(shimpents_store_file)
         # search this tracking_code
         found = False
         for item in data_list:
@@ -182,21 +177,9 @@ class OrderManager:
 
         shipments_file = JSON_FILES_PATH + "shipments_delivered.json"
 
-        try:
-            with open(shipments_file, "r", encoding="utf-8", newline="") as file:
-                data_list = json.load(file)
-        except FileNotFoundError as ex:
-            # file is not found , so  init my data_list
-            data_list = []
-        except json.JSONDecodeError as ex:
-            raise OrderManagementException("JSON Decode Error - Wrong JSON Format") from ex
+        data_list = my_json.read_json_register_order(shipments_file)
 
             # append the delivery info
         data_list.append(str(tracking_code))
         data_list.append(str(datetime.utcnow()))
-        try:
-            with open(shipments_file, "w", encoding="utf-8", newline="") as file:
-                json.dump(data_list, file, indent=2)
-        except FileNotFoundError as ex:
-            raise OrderManagementException("Wrong file or file path") from ex
-        return True
+        return my_json.write_json(shipments_file,data_list)
