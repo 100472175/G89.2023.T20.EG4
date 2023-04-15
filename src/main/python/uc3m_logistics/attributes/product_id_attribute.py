@@ -1,9 +1,11 @@
+"""Module for validating a ean13 code"""
 import re
-from .attribute import Attribute
 from uc3m_logistics.order_management_exception import OrderManagementException
+from .attribute import Attribute
 
 
 class ProductIdAttribute(Attribute):
+    """Class for validating a ean13 code"""
     def __init__(self):
         pass
 
@@ -32,3 +34,13 @@ class ProductIdAttribute(Attribute):
         if (code_read != -1) and (code_read == control_digit):
             return ean13
         raise OrderManagementException("Invalid EAN13 control digit")
+
+    @property
+    def data(self):
+        """method for getting a phone_number"""
+        return self._value
+
+    @data.setter
+    def data(self, value):
+        """method for setting a phone_number"""
+        self._value = self.validate(value)
