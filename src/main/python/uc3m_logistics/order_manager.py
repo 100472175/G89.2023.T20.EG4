@@ -101,7 +101,7 @@ class OrderManager:
     def validate_register_order_parameters(self, address, order_type, phone_number, zip_code):
         #self.validate_order_type(order_type)
         self.validate_delivery_address(address)
-        self.validate_phone_number(phone_number)
+        # self.validate_phone_number(phone_number)
         # self.validate_zip_code(zip_code)
 
     def validate_zip_code(self, zip_code):
