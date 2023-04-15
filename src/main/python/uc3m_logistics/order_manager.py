@@ -119,6 +119,18 @@ class OrderManager:
         # first read the file
         data_list = self.__my_json.read_json_deliver_product(shimpents_store_file)
         # search this tracking_code
+        self.get_tracking_code_datetime(data_list, tracking_code)
+
+        shipments_file = JSON_FILES_PATH + "shipments_delivered.json"
+
+        data_list = self.__my_json.read_json_register_order(shipments_file)
+
+            # append the delivery info
+        data_list.append(str(tracking_code))
+        data_list.append(str(datetime.utcnow()))
+        return self.__my_json.write_json(shipments_file,data_list)
+
+    def get_tracking_code_datetime(self, data_list, tracking_code):
         found = False
         for item in data_list:
             if item["_OrderShipping__tracking_code"] == tracking_code:
@@ -131,12 +143,3 @@ class OrderManager:
         delivery_date = datetime.fromtimestamp(del_timestamp).date()
         if delivery_date != today:
             raise OrderManagementException("Today is not the delivery date")
-
-        shipments_file = JSON_FILES_PATH + "shipments_delivered.json"
-
-        data_list = self.__my_json.read_json_register_order(shipments_file)
-
-            # append the delivery info
-        data_list.append(str(tracking_code))
-        data_list.append(str(datetime.utcnow()))
-        return self.__my_json.write_json(shipments_file,data_list)
