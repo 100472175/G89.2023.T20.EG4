@@ -180,8 +180,7 @@ class OrderManager:
         #check all the information
         try:
             my_order_id_re = re.compile(r"[0-9a-fA-F]{32}$")
-            res = my_order_id_re.fullmatch(data["OrderID"])
-            if not res:
+            if not my_order_id_re.fullmatch(data["OrderID"]):
                 raise OrderManagementException("order id is not valid")
         except KeyError as ex:
             raise OrderManagementException("Bad label") from ex
@@ -189,8 +188,7 @@ class OrderManager:
         try:
             regex_email = r'^[a-z0-9]+([\._]?[a-z0-9]+)+[@](\w+[.])+\w{2,3}$'
             my_email_re = re.compile(regex_email)
-            res = my_email_re.fullmatch(data["ContactEmail"])
-            if not res:
+            if not my_email_re.fullmatch(data["ContactEmail"]):
                 raise OrderManagementException("contact email is not valid")
         except KeyError as ex:
             raise OrderManagementException("Bad label") from ex
