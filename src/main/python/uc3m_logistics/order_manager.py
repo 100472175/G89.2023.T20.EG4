@@ -10,11 +10,12 @@ from .order_management_exception import OrderManagementException
 from .order_shipping import OrderShipping
 from .order_manager_config import JSON_FILES_PATH
 
+
 class OrderManager:
     """Class for providing the methods for managing the orders process"""
+
     def __init__(self):
         pass
-
 
     @staticmethod
     def validate_tracking_code(t_c):
@@ -41,7 +42,7 @@ class OrderManager:
             data_list.append(data.__dict__)
         else:
             raise OrderManagementException("order_id is already registered in orders_store")
-        return my_json.write_json(file_store,data_list)
+        return my_json.write_json(file_store, data_list)
 
     @staticmethod
     def save_fast(data):
@@ -61,57 +62,68 @@ class OrderManager:
         my_json = JSON()
         data_list = my_json.read_json_register_order(shipments_store_file)
 
-        #append the shipments list
+        # append the shipments list
         data_list.append(shipment.__dict__)
 
-        my_json.write_json(shipments_store_file,data_list)
+        my_json.write_json(shipments_store_file, data_list)
 
-
-    #pylint: disable=too-many-arguments
+    # pylint: disable=too-many-arguments
     def register_order(self, product_id,
-                        order_type,
-                        address,
-                        phone_number,
-                        zip_code):
+                       order_type,
+                       address,
+                       phone_number,
+                       zip_code):
         """Register the orders into the order's file"""
 
-        my_order = OrderRequest(product_id= product_id,
-                                order_type= order_type,
-                                delivery_address= address,
-                                phone_number= phone_number,
-                                zip_code= zip_code)
+        my_order = OrderRequest(product_id=product_id,
+                                order_type=order_type,
+                                delivery_address=address,
+                                phone_number=phone_number,
+                                zip_code=zip_code)
 
         self.save_store(data=my_order)
 
         return my_order.order_id
 
-    #pylint: disable=too-many-locals
-    def send_product (self, input_file):
+    # pylint: disable=too-many-locals
+    def send_product(self, input_file):
         """Sends the order included in the input_file"""
         my_json = JSON()
         data = my_json.read_json_send_product(input_file)
 
-
-        #check all the information
+        # check all the information
         self.check_order_id(data)
-
         self.check_email(data)
 
         file_store = JSON_FILES_PATH + "orders_store.json"
-
         data_list = my_json.read_json_register_order(file_store)
         found = False
+        found, proid, reg_type = self.order_object_generator(data, data_list, found)
+
+        if not found:
+            raise OrderManagementException("order_id not found")
+
+        my_sign = OrderShipping(product_id=proid,
+                                order_id=data["OrderID"],
+                                order_type=reg_type,
+                                delivery_email=data["ContactEmail"])
+
+        self.save_orders_shipped(my_sign)
+
+        return my_sign.tracking_code
+
+    def order_object_generator(self, data, data_list, found):
         for item in data_list:
             if item["_OrderRequest__order_id"] == data["OrderID"]:
                 found = True
-                #retrieve the orders data
+                # retrieve the orders data
                 proid = item["_OrderRequest__product_id"]
                 address = item["_OrderRequest__delivery_address"]
                 reg_type = item["_OrderRequest__order_type"]
                 phone = item["_OrderRequest__phone_number"]
                 order_timestamp = item["_OrderRequest__time_stamp"]
                 zip_code = item["_OrderRequest__zip_code"]
-                #set the time when the order was registered for checking the md5
+                # set the time when the order was registered for checking the md5
                 with freeze_time(datetime.fromtimestamp(order_timestamp).date()):
                     order = OrderRequest(product_id=proid,
                                          delivery_address=address,
@@ -121,20 +133,7 @@ class OrderManager:
 
                 if order.order_id != data["OrderID"]:
                     raise OrderManagementException("Orders' data have been manipulated")
-
-        if not found:
-            raise OrderManagementException("order_id not found")
-
-        my_sign= OrderShipping(product_id=proid,
-                               order_id=data["OrderID"],
-                               order_type=reg_type,
-                               delivery_email=data["ContactEmail"])
-
-        #save the OrderShipping in shipments_store.json
-
-        self.save_orders_shipped(my_sign)
-
-        return my_sign.tracking_code
+        return found, proid, reg_type
 
     def check_email(self, data):
         try:
@@ -157,7 +156,7 @@ class OrderManager:
         """Register the delivery of the product"""
         self.validate_tracking_code(tracking_code)
 
-        #check if this tracking_code is in shipments_store
+        # check if this tracking_code is in shipments_store
         shimpents_store_file = JSON_FILES_PATH + "shipments_store.json"
         # first read the file
         try:
@@ -167,7 +166,7 @@ class OrderManager:
             raise OrderManagementException("JSON Decode Error - Wrong JSON Format") from ex
         except FileNotFoundError as ex:
             raise OrderManagementException("shipments_store not found") from ex
-        #search this tracking_code
+        # search this tracking_code
         found = False
         for item in data_list:
             if item["_OrderShipping__tracking_code"] == tracking_code:
@@ -176,8 +175,8 @@ class OrderManager:
         if not found:
             raise OrderManagementException("tracking_code is not found")
 
-        today= datetime.today().date()
-        delivery_date= datetime.fromtimestamp(del_timestamp).date()
+        today = datetime.today().date()
+        delivery_date = datetime.fromtimestamp(del_timestamp).date()
         if delivery_date != today:
             raise OrderManagementException("Today is not the delivery date")
 

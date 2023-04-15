@@ -2,7 +2,6 @@
 import hashlib
 import json
 from datetime import datetime
-from .order_management_exception import OrderManagementException
 # Imports for validating parameters
 from .order_type_attribute import OrderTypeAttribute
 from .zip_code_attribute import ZipCodeAttribute
