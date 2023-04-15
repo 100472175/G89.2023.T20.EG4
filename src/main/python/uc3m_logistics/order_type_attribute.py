@@ -4,7 +4,7 @@ from abc import ABC
 from .attribute import Attribute
 from .order_management_exception import OrderManagementException
 
-class OrderTypeAttribute(Attribute):
+class OrderTypeAttribute():
     def __init__(self):
         pass
     def validate(self, value):
