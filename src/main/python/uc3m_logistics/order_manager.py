@@ -55,7 +55,7 @@ class OrderManager:
         """Method for saving the orders store"""
 
         # Read the JSON
-        file_store = JSON_FILES_PATH + "orders_store_manipulated.json"
+        file_store = JSON_FILES_PATH + "orders_store.json"
         my_json = JSON()
         data_list = my_json.read_json_register_order(file_store)
 
@@ -77,7 +77,7 @@ class OrderManager:
     @staticmethod
     def save_fast(data):
         """Method for saving the orders store"""
-        orders_store = JSON_FILES_PATH + "orders_store_manipulated.json"
+        orders_store = JSON_FILES_PATH + "orders_store.json"
         with open(orders_store, "r+", encoding="utf-8", newline="") as file:
             data_list = json.load(file)
             data_list.append(data.__dict__)
@@ -125,7 +125,7 @@ class OrderManager:
         return my_order.order_id
 
     def validate_register_order_parameters(self, address, order_type, phone_number, zip_code):
-        #self.validate_order_type(order_type)
+        self.validate_order_type(order_type)
         self.validate_delivery_address(address)
         self.validate_phone_number(phone_number)
         self.validate_zip_code(zip_code)
@@ -158,6 +158,7 @@ class OrderManager:
         my_json = JSON()
         data = my_json.read_json_send_product(input_file)
 
+
         #check all the information
         try:
             my_order_id_re = re.compile(r"[0-9a-fA-F]{32}$")
@@ -173,7 +174,7 @@ class OrderManager:
                 raise OrderManagementException("contact email is not valid")
         except KeyError as ex:
             raise OrderManagementException("Bad label") from ex
-        file_store = JSON_FILES_PATH + "orders_store_manipulated.json"
+        file_store = JSON_FILES_PATH + "orders_store.json"
 
         with open(file_store, "r", encoding="utf-8", newline="") as file:
             data_list = json.load(file)
@@ -241,7 +242,7 @@ class OrderManager:
         if delivery_date != today:
             raise OrderManagementException("Today is not the delivery date")
 
-        shipments_file = JSON_FILES_PATH + "cfghjkl.json"
+        shipments_file = JSON_FILES_PATH + "shipments_delivered.json"
 
         try:
             with open(shipments_file, "r", encoding="utf-8", newline="") as file:
