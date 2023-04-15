@@ -28,4 +28,9 @@ class JSON:
         return data
 
     def write_json(self,file,content):
-        pass
+        try:
+            with open(file, "w", encoding="utf-8", newline="") as f:
+                json.dump(content, f, indent=2)
+        except FileNotFoundError as ex:
+            raise OrderManagementException("Wrong file or file path") from ex
+        return True

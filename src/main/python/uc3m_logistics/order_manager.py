@@ -41,12 +41,7 @@ class OrderManager:
             data_list.append(data.__dict__)
         else:
             raise OrderManagementException("order_id is already registered in orders_store")
-        try:
-            with open(file_store, "w", encoding="utf-8", newline="") as file:
-                json.dump(data_list, file, indent=2)
-        except FileNotFoundError as ex:
-            raise OrderManagementException("Wrong file or file path") from ex
-        return True
+        return my_json.write_json(file_store,data_list)
 
     @staticmethod
     def save_fast(data):
@@ -69,11 +64,7 @@ class OrderManager:
         #append the shipments list
         data_list.append(shipment.__dict__)
 
-        try:
-            with open(shipments_store_file, "w", encoding="utf-8", newline="") as file:
-                json.dump(data_list, file, indent=2)
-        except FileNotFoundError as ex:
-            raise OrderManagementException("Wrong file or file path") from ex
+        my_json.write_json(shipments_store_file,data_list)
 
 
     #pylint: disable=too-many-arguments
@@ -84,10 +75,6 @@ class OrderManager:
                         zip_code):
         """Register the orders into the order's file"""
 
-        self.validate_register_order_parameters(address=address, order_type=order_type,
-                                                phone_number=phone_number, zip_code=zip_code)
-
-
         my_order = OrderRequest(product_id= product_id,
                                 order_type= order_type,
                                 delivery_address= address,
@@ -97,34 +84,6 @@ class OrderManager:
         self.save_store(data=my_order)
 
         return my_order.order_id
-
-    def validate_register_order_parameters(self, address, order_type, phone_number, zip_code):
-        #self.validate_order_type(order_type)
-        self.validate_delivery_address(address)
-        # self.validate_phone_number(phone_number)
-        # self.validate_zip_code(zip_code)
-
-    def validate_zip_code(self, zip_code):
-        if zip_code.isnumeric() and len(zip_code) == 5:
-            if (int(zip_code) > 52999 or int(zip_code) < 1000):
-                raise OrderManagementException("zip_code is not valid")
-        else:
-            raise OrderManagementException("zip_code format is not valid")
-
-    def validate_phone_number(self, phone_number):
-        my_phone_number_re = re.compile(r"^(\+)[0-9]{11}")
-        if not my_phone_number_re.fullmatch(phone_number):
-            raise OrderManagementException("phone number is not valid")
-
-    def validate_delivery_address(self, address):
-        my_address_re = re.compile(r"^(?=^.{20,100}$)(([a-zA-Z0-9]+\s)+[a-zA-Z0-9]+)$")
-        if not my_address_re.fullmatch(address):
-            raise OrderManagementException("address is not valid")
-
-    def validate_order_type(self, order_type):
-        my_order_type_re = re.compile(r"(Regular|Premium)")
-        if not my_order_type_re.fullmatch(order_type):
-            raise OrderManagementException("order_type is not valid")
 
     #pylint: disable=too-many-locals
     def send_product (self, input_file):
