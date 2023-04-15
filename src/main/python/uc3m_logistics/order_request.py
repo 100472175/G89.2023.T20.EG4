@@ -7,6 +7,7 @@ from .order_management_exception import OrderManagementException
 from .order_type_attribute import OrderTypeAttribute
 from .zip_code_attribute import ZipCodeAttribute
 from .product_id_attribute import ProductIdAttribute
+from .address_attribute import AddressAttribute
 class OrderRequest:
     """Class representing the register of the order in the system"""
 
@@ -33,7 +34,7 @@ class OrderRequest:
 
     @delivery_address.setter
     def delivery_address(self, value):
-        self.__delivery_address = value
+        self.__delivery_address = AddressAttribute().validate(value)
 
     @property
     def order_type(self):
