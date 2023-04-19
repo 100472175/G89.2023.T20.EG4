@@ -4,7 +4,6 @@ import hashlib
 from uc3m_logistics.attributes.product_id_attribute import ProductIdAttribute
 
 
-
 # pylint: disable=too-many-instance-attributes
 class OrderShipping():
     """Class representing the shipping of an order"""
@@ -31,7 +30,10 @@ class OrderShipping():
         return "{alg:" + self.__alg + ",typ:" + self.__type + ",order_id:" + \
             self.__order_id + ",issuedate:" + str(self.__issued_at) + \
             ",deliveryday:" + str(self.__delivery_day) + "}"
-
+    """
+    def save_to_store(self):
+        OrderRequestStore().add_item(self)
+    """
     @property
     def product_id(self):
         """Property that represents the product_id of the order"""

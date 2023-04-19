@@ -15,11 +15,11 @@ class OrderRequest:
     # pylint: disable=too-many-arguments
     def __init__(self, product_id, order_type,
                  delivery_address, phone_number, zip_code):
-        self.product_id = product_id
-        self.delivery_address = delivery_address
-        self.order_type = order_type
-        self.phone_number = phone_number
-        self.zip_code = zip_code
+        self.__product_id = ProductIdAttribute().validate(product_id)
+        self.__delivery_address = AddressAttribute().validate(delivery_address)
+        self.__order_type = OrderTypeAttribute().validate(order_type)
+        self.__phone_number = PhoneNumberAttribute().validate(phone_number)
+        self.__zip_code = ZipCodeAttribute().validate(zip_code)
         justnow = datetime.utcnow()
         self.__time_stamp = datetime.timestamp(justnow)
         self.__order_id = hashlib.md5(self.__str__().encode()).hexdigest()
@@ -27,6 +27,10 @@ class OrderRequest:
     def __str__(self):
         return "OrderRequest:" + json.dumps(self.__dict__)
 
+    """
+    def save_to_store(self):
+        OrderRequestStore().add_item(self)
+    """
     @property
     def delivery_address(self):
         """Property representing the address where the product

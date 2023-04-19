@@ -29,16 +29,6 @@ class Stores:
         return my_json.write_json(file_store, data_list)
 
     @staticmethod
-    def unprotected_saving(data):
-        """Method for saving the orders store"""
-        orders_store = JSON_FILES_PATH + "orders_store.json"
-        with open(orders_store, "r+", encoding="utf-8", newline="") as file:
-            data_list = json.load(file)
-            data_list.append(data.__dict__)
-            file.seek(0)
-            json.dump(data_list, file, indent=2)
-
-    @staticmethod
     def robust_order_shipping_saving(shipment):
         """Saves the shipping object into a file"""
         # Read the file
