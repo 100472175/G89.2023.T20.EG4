@@ -2,7 +2,9 @@
 from datetime import datetime
 import hashlib
 from uc3m_logistics.attributes.product_id_attribute import ProductIdAttribute
-
+from .order_management_exception import OrderManagementException
+from uc3m_logistics.attributes.tracking_code_attribute import TrackingCodeAttribute
+from uc3m_logistics.stores.order_shipping_store import OrderShippingStore
 
 # pylint: disable=too-many-instance-attributes
 class OrderShipping():
@@ -34,6 +36,13 @@ class OrderShipping():
     def save_to_store(self):
         OrderRequestStore().add_item(self)
     """
+    def from_tracking_code(self,tracking_code:str):
+        TrackingCodeAttribute().validate(tracking_code)
+        order_shipping = OrderShippingStore().find_item_by_key(tracking_code)
+        if not order_shipping:
+            raise OrderManagementException("tracking_code is not found")
+        return order_shipping
+
     @property
     def product_id(self):
         """Property that represents the product_id of the order"""
