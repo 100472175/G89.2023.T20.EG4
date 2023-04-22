@@ -10,6 +10,7 @@ from .order_management_exception import OrderManagementException
 from .order_shipping import OrderShipping
 from .order_manager_config import JSON_FILES_PATH
 from .send_product_input import SendProductInput
+from .order_delivery import OrderDelivery
 
 class OrderManager:
     """Class for providing the methods for managing the orders process"""
@@ -108,47 +109,12 @@ class OrderManager:
         except KeyError as ex:
             raise OrderManagementException("Bad label") from ex
 
-    @staticmethod
-    def validate_tracking_code(t_c):
-        """Method for validating sha256 values"""
-        my_tracking_code = re.compile(r"[0-9a-fA-F]{64}$")
-        if not my_tracking_code.fullmatch(t_c):
-            raise OrderManagementException("tracking_code format is not valid")
-
     def deliver_product(self, tracking_code):
         """Register the delivery of the product"""
-        self.validate_tracking_code(tracking_code)
+        my_order_delivery = OrderDelivery(tracking_code)
+        return my_order_delivery.save_to_store()
 
-        # check if this tracking_code is in shipments_store
-        shimpents_store_file = JSON_FILES_PATH + "shipments_store.json"
-        # first read the file
-        data_list = self.__my_json.read_json_deliver_product(shimpents_store_file)
-        # search this tracking_code
-        self.get_tracking_code_datetime(data_list, tracking_code)
 
-        shipments_file = JSON_FILES_PATH + "shipments_delivered.json"
-
-        data_list = self.__my_json.read_json_register_order(shipments_file)
-
-            # append the delivery info
-        data_list.append(str(tracking_code))
-        data_list.append(str(datetime.utcnow()))
-        return self.__my_json.write_json(shipments_file,data_list)
-
-    def get_tracking_code_datetime(self, data_list, tracking_code):
-        """Method for getting the tracking code and the datetime"""
-        found = False
-        for item in data_list:
-            if item["_OrderShipping__tracking_code"] == tracking_code:
-                found = True
-                del_timestamp = item["_OrderShipping__delivery_day"]
-        if not found:
-            raise OrderManagementException("tracking_code is not found")
-
-        today = datetime.today().date()
-        delivery_date = datetime.fromtimestamp(del_timestamp).date()
-        if delivery_date != today:
-            raise OrderManagementException("Today is not the delivery date")
 
 
 """

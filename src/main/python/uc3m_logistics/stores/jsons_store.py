@@ -1,15 +1,25 @@
 """Module for validating a order_type"""
 import json
-from abc import abstractmethod
+from abc import ABC,abstractmethod
 from uc3m_logistics.order_management_exception import OrderManagementException
 
 
-class JSON:
+class JsonStore(ABC):
     """Class for reading and writing json files"""
+    _FILE_PATH = ""
     def __init__(self):
-        pass
+        self.data = self.load()
     def load(self):
-        pass
+        try:
+            with open(self._FILE_PATH,"r",encoding="utf-8",newline="") as file:
+                data = json.load(file)
+        except FileNotFoundError:
+            data = []
+            with open(self._FILE_PATH,"w",encoding="utf-8",newline="") as file:
+                json.dump(data,file,indent=2)
+        except json.JSONDecodeError as ex:
+            raise OrderManagementException("JSON Decode Error - Wrong JSON Format") from ex
+        return data
     def save(self):
         try:
             with open(self._File_PATH,"w",encoding="utf-8",newline="") as file:
@@ -22,6 +32,9 @@ class JSON:
     @abstractmethod
     def add_item(self,new_item):
         pass
+    @property
+    def data(self):
+        return self.__data
 """
 # Add_item in order_request_store.py
         found = False
