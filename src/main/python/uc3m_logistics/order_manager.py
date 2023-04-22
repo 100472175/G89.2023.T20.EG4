@@ -1,6 +1,5 @@
 """Module """
 import datetime
-import re
 from datetime import datetime
 from freezegun import freeze_time
 from uc3m_logistics.stores.jsons_manager import JSON
@@ -89,25 +88,6 @@ class OrderManager:
                 if order.order_id != data["OrderID"]:
                     raise OrderManagementException("Orders' data have been manipulated")
         return found, proid, reg_type
-
-    def check_email(self, data):
-        """Method for checking the email format"""
-        try:
-            regex_email = r'^[a-z0-9]+([\._]?[a-z0-9]+)+[@](\w+[.])+\w{2,3}$'
-            my_email_re = re.compile(regex_email)
-            if not my_email_re.fullmatch(data["ContactEmail"]):
-                raise OrderManagementException("contact email is not valid")
-        except KeyError as ex:
-            raise OrderManagementException("Bad label") from ex
-
-    def check_order_id(self, data):
-        """Method for checking the order_id format"""
-        try:
-            my_order_id_re = re.compile(r"[0-9a-fA-F]{32}$")
-            if not my_order_id_re.fullmatch(data["OrderID"]):
-                raise OrderManagementException("order id is not valid")
-        except KeyError as ex:
-            raise OrderManagementException("Bad label") from ex
 
     def deliver_product(self, tracking_code):
         """Register the delivery of the product"""

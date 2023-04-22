@@ -8,7 +8,7 @@ class JsonStore(ABC):
     """Class for reading and writing json files"""
     _FILE_PATH = ""
     def __init__(self):
-        self.data = self.load()
+        self.__data = self.load()
     def load(self):
         try:
             with open(self._FILE_PATH,"r",encoding="utf-8",newline="") as file:
@@ -22,7 +22,7 @@ class JsonStore(ABC):
         return data
     def save(self):
         try:
-            with open(self._File_PATH,"w",encoding="utf-8",newline="") as file:
+            with open(self._FILE_PATH,"w",encoding="utf-8",newline="") as file:
                 json.dump(self.__data,file,indent=2)
         except FileNotFoundError as ex:
             raise OrderManagementException("Wrong file or file path")
@@ -35,15 +35,3 @@ class JsonStore(ABC):
     @property
     def data(self):
         return self.__data
-"""
-# Add_item in order_request_store.py
-        found = False
-        for item in self.data:
-            if item["_OrderRequest__order_id"] == new_item.order_id:
-                found = True
-        if not found:
-            self.data.append(new_item.__dict__)
-        else:
-            raise OrderManagementException("order_id is already registered in order request")
-        self.save()
-"""
