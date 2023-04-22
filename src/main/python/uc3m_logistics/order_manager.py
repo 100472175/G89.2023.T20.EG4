@@ -11,6 +11,9 @@ from .order_manager_config import JSON_FILES_PATH
 from .send_product_input import SendProductInput
 from .order_delivery import OrderDelivery
 
+# NEW IMPORTS
+from uc3m_logistics.stores.order_request_store import OrderRequestStore
+from uc3m_logistics.stores.order_shipping_store import OrderShippingStore
 class OrderManager:
     """Class for providing the methods for managing the orders process"""
     def __init__(self):
@@ -32,8 +35,11 @@ class OrderManager:
                                 zip_code=zip_code)
 
         self.__my_store.robust_saving(my_order)
-
         return my_order.order_id
+        """NEW PART"""
+        #my_store = OrderRequestStore()
+        #return my_store.find_item_by_key(my_order)
+
 
     # pylint: disable=too-many-locals
     def send_product(self, input_file):
@@ -47,26 +53,10 @@ class OrderManager:
         # New class
         data = SendProductInput.from_json(input_file)
         SendProductInput(orderId=data["OrderID"], email=data["ContactEmail"])
+        """BEFORE
         file_store = JSON_FILES_PATH + "orders_store.json"
         data_list = self.__my_json.read_json_register_order(file_store)
         found = False
-        found, proid, reg_type = self.order_object_generator(data, data_list, found)
-
-        if not found:
-            raise OrderManagementException("order_id not found")
-
-        my_sign = OrderShipping(product_id=proid,
-                                order_id=data["OrderID"],
-                                order_type=reg_type,
-                                delivery_email=data["ContactEmail"])
-
-        my_store = Stores()
-        my_store.robust_order_shipping_saving(my_sign)
-
-        return my_sign.tracking_code
-
-    def order_object_generator(self, data, data_list, found):
-        """Generates the order object"""
         for item in data_list:
             if item["_OrderRequest__order_id"] == data["OrderID"]:
                 found = True
@@ -87,7 +77,22 @@ class OrderManager:
 
                 if order.order_id != data["OrderID"]:
                     raise OrderManagementException("Orders' data have been manipulated")
-        return found, proid, reg_type
+
+        if not found:
+            raise OrderManagementException("order_id not found")"""
+        "NEW PART"
+        my_store = OrderRequestStore()
+        proid,reg_type = my_store.find_item_by_key(data["OrderID"])
+        my_sign = OrderShipping(product_id=proid,
+                                order_id=data["OrderID"],
+                                order_type=reg_type,
+                                delivery_email=data["ContactEmail"])
+
+        my_store = Stores()
+        my_store.robust_order_shipping_saving(my_sign)
+
+        return my_sign.tracking_code
+
 
     def deliver_product(self, tracking_code):
         """Register the delivery of the product"""

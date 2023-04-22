@@ -1,7 +1,7 @@
 from uc3m_logistics.order_manager_config import JSON_FILES_PATH
 from uc3m_logistics.stores.jsons_store import JsonStore
 class OrderShippingStore(JsonStore):
-    _File_Path = JSON_FILES_PATH + "shipments_store.json"
+    _FILE_PATH = JSON_FILES_PATH + "shipments_store.json"
 
     def find_item_by_key(self, key):
         print("OrderShippingStore find_item_by_key",key,self.data)
