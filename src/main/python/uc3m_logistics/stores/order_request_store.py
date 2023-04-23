@@ -40,5 +40,5 @@ class OrderRequestStore(JsonStore):
         if not found:
             self.data.append(new_item.__dict__)
         else:
-            raise OrderManagementException("order_id is already registered in order request")
+            raise OrderManagementException("order_id is already registered in orders_store")
         self.save()

@@ -33,12 +33,14 @@ class OrderManager:
                                 delivery_address=address,
                                 phone_number=phone_number,
                                 zip_code=zip_code)
-
+        """OLD
         self.__my_store.robust_saving(my_order)
         return my_order.order_id
+        """
         """NEW PART"""
-        #my_store = OrderRequestStore()
-        #return my_store.find_item_by_key(my_order)
+        my_store = OrderRequestStore()
+        my_store.add_item(my_order)
+        return  my_order.order_id
 
 
     # pylint: disable=too-many-locals
