@@ -44,53 +44,24 @@ class OrderManager:
     # pylint: disable=too-many-locals
     def send_product(self, input_file):
         """Sends the order included in the input_file"""
-
-        """
-        # check all the information
-        self.check_order_id(data)
-        self.check_email(data)
-        """
         # New class
         data = SendProductInput.from_json(input_file)
         SendProductInput(orderId=data["OrderID"], email=data["ContactEmail"])
-        """BEFORE
-        file_store = JSON_FILES_PATH + "orders_store.json"
-        data_list = self.__my_json.read_json_register_order(file_store)
-        found = False
-        for item in data_list:
-            if item["_OrderRequest__order_id"] == data["OrderID"]:
-                found = True
-                # retrieve the orders data
-                proid = item["_OrderRequest__product_id"]
-                address = item["_OrderRequest__delivery_address"]
-                reg_type = item["_OrderRequest__order_type"]
-                phone = item["_OrderRequest__phone_number"]
-                order_timestamp = item["_OrderRequest__time_stamp"]
-                zip_code = item["_OrderRequest__zip_code"]
-                # set the time when the order was registered for checking the md5
-                with freeze_time(datetime.fromtimestamp(order_timestamp).date()):
-                    order = OrderRequest(product_id=proid,
-                                         delivery_address=address,
-                                         order_type=reg_type,
-                                         phone_number=phone,
-                                         zip_code=zip_code)
 
-                if order.order_id != data["OrderID"]:
-                    raise OrderManagementException("Orders' data have been manipulated")
-
-        if not found:
-            raise OrderManagementException("order_id not found")"""
-        "NEW PART"
         my_store = OrderRequestStore()
         proid,reg_type = my_store.find_item_by_key(data["OrderID"])
         my_sign = OrderShipping(product_id=proid,
                                 order_id=data["OrderID"],
                                 order_type=reg_type,
                                 delivery_email=data["ContactEmail"])
-
+        """OLD
         my_store = Stores()
         my_store.robust_order_shipping_saving(my_sign)
-
+        return my_sign.tracking_code
+        """
+        # NEW
+        my_store = OrderShippingStore()
+        my_store.add_item(my_sign)
         return my_sign.tracking_code
 
 

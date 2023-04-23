@@ -5,13 +5,11 @@ from uc3m_logistics.order_request import OrderRequest
 from freezegun import freeze_time
 from datetime import datetime
 class OrderRequestStore(JsonStore):
-    def __init__(self):
-        self._FILE_PATH = JSON_FILES_PATH + "orders_store.json"
-        self.__data = self.load()
+    _FILE_PATH = JSON_FILES_PATH + "orders_store.json"
     def find_item_by_key(self, key:str):
         found_item = False
         item = None
-        for order in self.__data:
+        for order in self.data:
             if order["_OrderRequest__order_id"] == key:
                 found_item = True
                 item = order
@@ -36,7 +34,7 @@ class OrderRequestStore(JsonStore):
 
     def add_item(self, new_item):
         found = False
-        for item in self.__data:
+        for item in self.data:
             if item["_OrderRequest__order_id"] == new_item.order_id:
                 found = True
         if not found:
