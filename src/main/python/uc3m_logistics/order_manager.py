@@ -11,9 +11,10 @@ from .order_manager_config import JSON_FILES_PATH
 from .send_product_input import SendProductInput
 from .order_delivery import OrderDelivery
 
-# NEW IMPORTS
+# NEW IMPORTS FOR STORES
 from uc3m_logistics.stores.order_request_store import OrderRequestStore
 from uc3m_logistics.stores.order_shipping_store import OrderShippingStore
+
 class OrderManager:
     """Class for providing the methods for managing the orders process"""
     def __init__(self):

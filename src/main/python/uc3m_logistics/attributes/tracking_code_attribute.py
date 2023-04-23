@@ -4,9 +4,7 @@ from uc3m_logistics.order_management_exception import OrderManagementException
 from .attribute import Attribute
 
 class TrackingCodeAttribute(Attribute):
-    """Class for validating a zip_code"""
-    def __init__(self):
-        pass
+    """Class for validating the tracking code"""
     def validate(self, t_c):
         """Method for checking the email format"""
         my_tracking_code = re.compile(r"[0-9a-fA-F]{64}$")

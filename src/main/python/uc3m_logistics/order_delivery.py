@@ -4,6 +4,8 @@ from uc3m_logistics.stores.jsons_manager import JSON
 from uc3m_logistics.attributes.tracking_code_attribute import TrackingCodeAttribute
 from .order_manager_config import JSON_FILES_PATH
 from .order_management_exception import OrderManagementException
+# Store
+from uc3m_logistics.stores.order_delivery_store import OrderDeliveryStore
 # pylint: disable=too-many-instance-attributes
 class OrderDelivery():
     """Class representing the shipping of an order"""
@@ -19,7 +21,7 @@ class OrderDelivery():
         self.__tracking_code = TrackingCodeAttribute().validate(value)
 
     def save_to_store(self):
-        # check if this tracking_code is in shipments_store
+        """# check if this tracking_code is in shipments_store
         shimpents_store_file = JSON_FILES_PATH + "shipments_store.json"
         # first read the file
         data_list = self.__my_json.read_json_deliver_product(shimpents_store_file)
@@ -44,4 +46,8 @@ class OrderDelivery():
         # append the delivery info
         data_list.append(str(self.__tracking_code))
         data_list.append(str(datetime.utcnow()))
-        return self.__my_json.write_json(shipments_file, data_list)
+        return self.__my_json.write_json(shipments_file, data_list)"""
+        my_order = OrderDeliveryStore()
+        my_order.find_item_by_key(self.__tracking_code)
+        my_order.add_item(self.__tracking_code)
+        return True
