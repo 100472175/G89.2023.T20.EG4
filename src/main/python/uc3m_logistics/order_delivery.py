@@ -1,18 +1,17 @@
 """Contains the class OrderDelivery"""
 from datetime import datetime
-from uc3m_logistics.stores.jsons_manager import JSON
 from uc3m_logistics.attributes.tracking_code_attribute import TrackingCodeAttribute
 from .order_manager_config import JSON_FILES_PATH
 from .order_management_exception import OrderManagementException
 # Store
 from uc3m_logistics.stores.order_delivery_store import OrderDeliveryStore
+from uc3m_logistics.stores.order_shipping_store import OrderShippingStore
 # pylint: disable=too-many-instance-attributes
 class OrderDelivery():
     """Class representing the shipping of an order"""
 
     def __init__(self, tracking_code):
         self.__tracking_code = TrackingCodeAttribute().validate(tracking_code)
-        self.__my_json = JSON()
     @property
     def tracking_code(self):
         return self.__tracking_code
@@ -47,7 +46,8 @@ class OrderDelivery():
         data_list.append(str(self.__tracking_code))
         data_list.append(str(datetime.utcnow()))
         return self.__my_json.write_json(shipments_file, data_list)"""
-        my_order = OrderDeliveryStore()
+        my_order =OrderShippingStore()
         my_order.find_item_by_key(self.__tracking_code)
-        my_order.add_item(self.__tracking_code)
+        my_order_delivery = OrderDeliveryStore()
+        my_order_delivery.add_item(self.__tracking_code)
         return True

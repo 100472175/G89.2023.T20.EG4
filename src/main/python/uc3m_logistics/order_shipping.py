@@ -13,9 +13,9 @@ class OrderShipping():
     def __init__(self, product_id, order_id, delivery_email, order_type):
         self.__alg = "SHA-256"
         self.__type = "DS"
-        self.product_id = product_id
-        self.order_id = order_id
-        self.delivery_email = delivery_email
+        self.__product_id = ProductIdAttribute().validate(product_id)
+        self.__order_id = order_id
+        self.__delivery_email = delivery_email
         justnow = datetime.utcnow()
         self.__issued_at = datetime.timestamp(justnow)
         if order_type == "Regular":
