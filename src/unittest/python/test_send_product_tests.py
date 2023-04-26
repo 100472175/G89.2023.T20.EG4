@@ -174,7 +174,7 @@ class TestSendProduct(TestCase):
 
 
     @freeze_time("2023-03-08")
-    def test_get_vaccine_date_no_ok_data_manipulated( self ):
+    def test_send_product_manipulated( self ):
         """ no quotes , not valid """
         file_test = JSON_FILES_RF2_PATH + "valid.json"
         my_manager = OrderManager()

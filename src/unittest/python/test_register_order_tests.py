@@ -115,7 +115,7 @@ class TestRegisterOrder(unittest.TestCase):
     """Class for testing register_order"""
     #pylint: disable=too-many-locals
     @freeze_time("2023-03-08")
-    def test_parametrized_valid_request_vaccination(self):
+    def test_parametrized_valid_register_order(self):
         "Parametrized tests: valid cases"
         file_store = JSON_FILES_PATH + "orders_store.json"
         if os.path.isfile(file_store):
@@ -140,7 +140,7 @@ class TestRegisterOrder(unittest.TestCase):
                         found = True
                 self.assertTrue(found)
 
-    def test_parametrized_not_valid_request_vaccination( self ):
+    def test_parametrized_not_valid_register_order( self ):
         """Method for testing order_request: invalid cases"""
         file_store = JSON_FILES_PATH + "orders_store.json"
         my_request = OrderManager()
@@ -168,7 +168,7 @@ class TestRegisterOrder(unittest.TestCase):
                 self.assertEqual(hash_original,hash_new)
 
     @freeze_time("2023-03-08")
-    def test__duplicate_valid_order_id(self):
+    def test_duplicate_valid_order_id(self):
         """ Test 20 , order id is registered in store (only with freezetime)"""
         file_store = JSON_FILES_PATH + "orders_store.json"
         if os.path.isfile(file_store):
