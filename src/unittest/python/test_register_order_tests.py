@@ -1,4 +1,4 @@
-"""Module for testing request_vaccination_id"""
+"""Module for testing register_order"""
 import os
 import unittest
 import json
