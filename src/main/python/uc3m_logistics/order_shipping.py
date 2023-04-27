@@ -52,7 +52,7 @@ class OrderShipping():
     def from_send_input_file(cls, input_file):
         """Returns the order shipping from the input file"""
         data = SendProductInput.from_json(input_file)
-        SendProductInput(orderId=data["OrderID"], email=data["ContactEmail"])
+        SendProductInput(order_id=data["OrderID"], email=data["ContactEmail"])
 
         my_store = OrderRequestStore()
         proid, reg_type = my_store.find_item_by_key(data["OrderID"])

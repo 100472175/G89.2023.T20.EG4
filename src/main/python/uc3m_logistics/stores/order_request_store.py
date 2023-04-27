@@ -1,12 +1,14 @@
+"""Module in charge of order_resuests' data management"""
+from datetime import datetime
+from freezegun import freeze_time
 from uc3m_logistics.order_manager_config import JSON_FILES_PATH
 from uc3m_logistics.order_management_exception import OrderManagementException
 from uc3m_logistics.stores.jsons_store import JsonStore
 from uc3m_logistics.order_request import OrderRequest
-from freezegun import freeze_time
-from datetime import datetime
 
 
 class OrderRequestStore():
+    """Class in charge of order_resuests' data management"""
     class __OrderRequestStore(JsonStore):
         _FILE_PATH = JSON_FILES_PATH + "orders_store.json"
 
