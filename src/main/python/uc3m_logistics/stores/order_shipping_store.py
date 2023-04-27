@@ -2,7 +2,8 @@ from uc3m_logistics.order_manager_config import JSON_FILES_PATH
 from uc3m_logistics.stores.jsons_store import JsonStore
 from uc3m_logistics.order_management_exception import OrderManagementException
 from datetime import datetime
-class OrderShippingStore(JsonStore):
+
+class OrderShippingStore():
     class __OrderShippingStore(JsonStore):
         _FILE_PATH = JSON_FILES_PATH + "shipments_store.json"
     

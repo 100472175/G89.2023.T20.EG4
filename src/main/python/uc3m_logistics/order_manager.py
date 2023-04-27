@@ -1,15 +1,14 @@
-"""Module """
-import datetime
-from .order_request import OrderRequest
-from .order_shipping import OrderShipping
-from .send_product_input import SendProductInput
-from .order_delivery import OrderDelivery
+"""Module that control everything, the manager"""
+from uc3m_logistics.order_request import OrderRequest
+from uc3m_logistics.order_shipping import OrderShipping
+from uc3m_logistics.order_delivery import OrderDelivery
+
 
 # NEW IMPORTS FOR STORES
-from uc3m_logistics.stores.order_request_store import OrderRequestStore
 
 class OrderManager:
     """Class for providing the methods for managing the orders process"""
+
     class __OrderManager():
         def __init__(self):
             pass
@@ -34,19 +33,10 @@ class OrderManager:
         # pylint: disable=too-many-locals
         def send_product(self, input_file):
             """Sends the order included in the input_file"""
-            # New class
-            data = SendProductInput.from_json(input_file)
-            SendProductInput(orderId=data["OrderID"], email=data["ContactEmail"])
+            order_shipping = OrderShipping.from_send_input_file(input_file)
 
-            my_store = OrderRequestStore()
-            proid, reg_type = my_store.find_item_by_key(data["OrderID"])
-            my_sign = OrderShipping(product_id=proid,
-                                    order_id=data["OrderID"],
-                                    order_type=reg_type,
-                                    delivery_email=data["ContactEmail"])
-
-            my_sign.save_to_store()
-            return my_sign.tracking_code
+            order_shipping.save_to_store()
+            return order_shipping.tracking_code
 
         def deliver_product(self, tracking_code):
             """Register the delivery of the product"""

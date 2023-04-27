@@ -2,9 +2,11 @@
 from datetime import datetime
 import hashlib
 from uc3m_logistics.attributes.product_id_attribute import ProductIdAttribute
-from .order_management_exception import OrderManagementException
 from uc3m_logistics.attributes.tracking_code_attribute import TrackingCodeAttribute
 from uc3m_logistics.stores.order_shipping_store import OrderShippingStore
+from uc3m_logistics.order_management_exception import OrderManagementException
+from uc3m_logistics.send_product_input import SendProductInput
+from uc3m_logistics.stores.order_request_store import OrderRequestStore
 
 # pylint: disable=too-many-instance-attributes
 class OrderShipping():
@@ -34,16 +36,30 @@ class OrderShipping():
             ",deliveryday:" + str(self.__delivery_day) + "}"
 
     def save_to_store(self):
-        from uc3m_logistics.stores.order_request_store import OrderRequestStore
+        """Saves the order shipping to the store"""
         OrderShippingStore().add_item(self)
 
 
     def from_tracking_code(self,tracking_code:str):
+        """Returns the order shipping from the tracking_code"""
         TrackingCodeAttribute().validate(tracking_code)
         order_shipping = OrderShippingStore().find_item_by_key(tracking_code)
         if not order_shipping:
             raise OrderManagementException("tracking_code is not found")
         return order_shipping
+
+    @classmethod
+    def from_send_input_file(cls, input_file):
+        """Returns the order shipping from the input file"""
+        data = SendProductInput.from_json(input_file)
+        SendProductInput(orderId=data["OrderID"], email=data["ContactEmail"])
+
+        my_store = OrderRequestStore()
+        proid, reg_type = my_store.find_item_by_key(data["OrderID"])
+        return OrderShipping(product_id=proid,
+                             order_id=data["OrderID"],
+                             order_type=reg_type,
+                             delivery_email=data["ContactEmail"])
 
     @property
     def product_id(self):

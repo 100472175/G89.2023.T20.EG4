@@ -1,0 +1,28 @@
+Name                                                   Stmts   Miss Branch BrPart  Cover
+----------------------------------------------------------------------------------------
+__init__.py                                                0      0      0      0   100%
+uc3m_logistics/__init__.py                                 6      0      0      0   100%
+uc3m_logistics/attributes/__init__.py                      0      0      0      0   100%
+uc3m_logistics/attributes/address_attribute.py            17      2      6      0    91%
+uc3m_logistics/attributes/attribute.py                     6      0      4      0   100%
+uc3m_logistics/attributes/email_attribute.py              21      3      6      0    89%
+uc3m_logistics/attributes/order_id_attirbute.py           20      3      6      0    88%
+uc3m_logistics/attributes/order_type_attribute.py         17      2      6      0    91%
+uc3m_logistics/attributes/phone_number_attribute.py       17      2      6      0    91%
+uc3m_logistics/attributes/product_id_attribute.py         31      4     12      0    91%
+uc3m_logistics/attributes/tracking_code_attribute.py      15      2      6      0    90%
+uc3m_logistics/attributes/zip_code_attribute.py           17      2      8      0    92%
+uc3m_logistics/order_delivery.py                          21      2      4      0    92%
+uc3m_logistics/order_management_exception.py              10      1      4      0    93%
+uc3m_logistics/order_manager.py                           32      3      2      0    91%
+uc3m_logistics/order_manager_config.py                     3      0      0      0   100%
+uc3m_logistics/order_request.py                           59     11     24      0    87%
+uc3m_logistics/order_shipping.py                          70     15     26      1    81%
+uc3m_logistics/send_product_input.py                      32      5     16      1    88%
+uc3m_logistics/stores/__init__.py                          0      0      0      0   100%
+uc3m_logistics/stores/jsons_store.py                      33      6     14      1    85%
+uc3m_logistics/stores/order_delivery_store.py             23      4      2      0    84%
+uc3m_logistics/stores/order_request_store.py              49      5     18      2    90%
+uc3m_logistics/stores/order_shipping_store.py             34      3     10      0    93%
+----------------------------------------------------------------------------------------
+TOTAL                                                    533     75    180      5    88%
