@@ -76,11 +76,11 @@ class OrderManager:
             OrderManager.instance = OrderManager.__OrderManager()
         return OrderManager.instance
 
-    def __getattr__(self, nombre):
-        return getattr(self.instance, nombre)
+    def __getattr__(self, name):
+        return getattr(self.instance, name)
 
-    def __setattr__(self, nombre, valor):
-        return setattr(self.instance, nombre, valor)
+    def __setattr__(self, name, value):
+        return setattr(self.instance, name, value)
 
     def __init__(self):
         pass
