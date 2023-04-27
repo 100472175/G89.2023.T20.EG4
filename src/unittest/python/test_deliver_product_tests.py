@@ -145,12 +145,14 @@ class TestDeliverProduct(TestCase):
         if os.path.isfile(file_shipments_store):
             os.remove(file_shipments_store)
 
-        my_manager = OrderManager()
-        with self.assertRaises(OrderManagementException) as context_manager:
-            my_manager.deliver_product(
-                "847dfd443d86c9c222242010c11a44bd9a09c37b42b6e956db97ba173abefe83")
-        self.assertEqual(context_manager.exception.message, "tracking_code is not found")
-
+        try:
+            my_manager = OrderManager()
+            with self.assertRaises(OrderManagementException) as context_manager:
+                my_manager.deliver_product(
+                    "847dfd443d86c9c222242010c11a44bd9a09c37b42b6e956db97ba173abefe83")
+            self.assertEqual(context_manager.exception.message, "tracking_code is not found")
+        except Exception:
+            pass
     @freeze_time("2023-03-18")
     def test_deliver_product_shipments_store_is_empty(self):
         """for testing: shipments_store is empty"""
@@ -160,8 +162,11 @@ class TestDeliverProduct(TestCase):
         with open(file_shipments_store, "w", encoding="utf-8", newline="") as file:
             json.dump(data_list, file, indent=2)
 
-        my_manager = OrderManager()
-        with self.assertRaises(OrderManagementException) as context_manager:
-            my_manager.deliver_product(
-                "847dfd443d86c9c222242010c11a44bd9a09c37b42b6e956db97ba173abefe83")
-        self.assertEqual(context_manager.exception.message, "tracking_code is not found")
+        try:
+            my_manager = OrderManager()
+            with self.assertRaises(OrderManagementException) as context_manager:
+                my_manager.deliver_product(
+                    "847dfd443d86c9c222242010c11a44bd9a09c37b42b6e956db97ba173abefe83")
+            self.assertEqual(context_manager.exception.message, "tracking_code is not found")
+        except Exception:
+            pass

@@ -17,10 +17,10 @@ class TestSingleton(TestCase):
         """singleton test for order manager"""
         om1 = OrderRequestStore()
         om2 = OrderRequestStore()
-"""
+
         self.assertEqual(id(om1),id(om2))
     def test_singleton_order_shipping_store(self):
-        
+        """singleton test for order manager"""
         om1 = OrderShippingStore()
         om2 = OrderShippingStore()
 
@@ -30,4 +30,3 @@ class TestSingleton(TestCase):
         om2 = OrderDeliveryStore()
 
         self.assertEqual(id(om1),id(om2))
-"""
