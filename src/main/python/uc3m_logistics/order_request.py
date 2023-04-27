@@ -8,6 +8,7 @@ from uc3m_logistics.attributes.zip_code_attribute import ZipCodeAttribute
 from uc3m_logistics.attributes.phone_number_attribute import PhoneNumberAttribute
 from uc3m_logistics.attributes.product_id_attribute import ProductIdAttribute
 from uc3m_logistics.attributes.address_attribute import AddressAttribute
+#from uc3m_logistics.stores.order_request_store import OrderRequestStore
 
 class OrderRequest:
     """Class representing the register of the order in the system"""
@@ -27,10 +28,13 @@ class OrderRequest:
     def __str__(self):
         return "OrderRequest:" + json.dumps(self.__dict__)
 
-    """
+
     def save_to_store(self):
+        """Saves the order request to the store"""
+        # Import for only this part of the code
+        from uc3m_logistics.stores.order_request_store import OrderRequestStore
         OrderRequestStore().add_item(self)
-    """
+
     @property
     def delivery_address(self):
         """Property representing the address where the product

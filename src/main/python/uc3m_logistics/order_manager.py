@@ -1,17 +1,12 @@
 """Module """
 import datetime
-from datetime import datetime
-from freezegun import freeze_time
 from .order_request import OrderRequest
-from .order_management_exception import OrderManagementException
 from .order_shipping import OrderShipping
-from .order_manager_config import JSON_FILES_PATH
 from .send_product_input import SendProductInput
 from .order_delivery import OrderDelivery
 
 # NEW IMPORTS FOR STORES
 from uc3m_logistics.stores.order_request_store import OrderRequestStore
-from uc3m_logistics.stores.order_shipping_store import OrderShippingStore
 
 class OrderManager:
     """Class for providing the methods for managing the orders process"""
@@ -32,13 +27,8 @@ class OrderManager:
                                     delivery_address=address,
                                     phone_number=phone_number,
                                     zip_code=zip_code)
-            """OLD
-            self.__my_store.robust_saving(my_order)
-            return my_order.order_id
-            """
-            """NEW PART"""
-            my_store = OrderRequestStore()
-            my_store.add_item(my_order)
+            my_order.save_to_store()
+
             return my_order.order_id
 
         # pylint: disable=too-many-locals
@@ -54,14 +44,8 @@ class OrderManager:
                                     order_id=data["OrderID"],
                                     order_type=reg_type,
                                     delivery_email=data["ContactEmail"])
-            """OLD
-            my_store = Stores()
-            my_store.robust_order_shipping_saving(my_sign)
-            return my_sign.tracking_code
-            """
-            # NEW
-            my_store = OrderShippingStore()
-            my_store.add_item(my_sign)
+
+            my_sign.save_to_store()
             return my_sign.tracking_code
 
         def deliver_product(self, tracking_code):
@@ -84,31 +68,3 @@ class OrderManager:
 
     def __init__(self):
         pass
-
-
-
-
-
-"""
-SINGLETON
-    class __Singleton:
-        def __init__(self):
-            self.name = None
-
-        def __str__(self):
-            return 'self ' + str(self.name)
-
-    instance = None
-
-    def __new__(cls):
-        if not OrderManager.instance:
-            OrderManager.instance = OrderManager.__Singleton()
-
-    def __getattr__(self, nombre):
-        return getattr(self.instance, nombre)
-
-    def __setattr__(self, nombre, valor):
-        return setattr(self.instance, nombre, valor)
-
-    return OrderManager.instance
-"""

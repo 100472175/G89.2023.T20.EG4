@@ -32,10 +32,12 @@ class OrderShipping():
         return "{alg:" + self.__alg + ",typ:" + self.__type + ",order_id:" + \
             self.__order_id + ",issuedate:" + str(self.__issued_at) + \
             ",deliveryday:" + str(self.__delivery_day) + "}"
-    """
+
     def save_to_store(self):
-        OrderRequestStore().add_item(self)
-    """
+        from uc3m_logistics.stores.order_request_store import OrderRequestStore
+        OrderShippingStore().add_item(self)
+
+
     def from_tracking_code(self,tracking_code:str):
         TrackingCodeAttribute().validate(tracking_code)
         order_shipping = OrderShippingStore().find_item_by_key(tracking_code)
