@@ -1,0 +1,20 @@
+Name                                                  Stmts   Miss Branch BrPart  Cover
+---------------------------------------------------------------------------------------
+__init__.py                                               0      0      0      0   100%
+uc3m_logistics/__init__.py                                6      0      0      0   100%
+uc3m_logistics/attributes/address_attribute.py           17      2      6      0    91%
+uc3m_logistics/attributes/attribute.py                    6      0      4      0   100%
+uc3m_logistics/attributes/order_type_attribute.py        17      2      6      0    91%
+uc3m_logistics/attributes/phone_number_attribute.py      17      2      6      0    91%
+uc3m_logistics/attributes/product_id_attribute.py        31      4     12      0    91%
+uc3m_logistics/attributes/zip_code_attribute.py          17      2      8      0    92%
+uc3m_logistics/order_management_exception.py             10      1      4      0    93%
+uc3m_logistics/order_manager.py                          89      1     26      2    97%
+uc3m_logistics/order_manager_config.py                    3      0      0      0   100%
+uc3m_logistics/order_request.py                          56      6     24      0    92%
+uc3m_logistics/order_shipping.py                         49      7     22      0    90%
+uc3m_logistics/stores/__init__.py                         0      0      0      0   100%
+uc3m_logistics/stores/jsons_manager.py                   37      6     14      3    82%
+uc3m_logistics/stores/stores.py                          35      6     14      0    84%
+---------------------------------------------------------------------------------------
+TOTAL                                                   390     39    146      5    91%
