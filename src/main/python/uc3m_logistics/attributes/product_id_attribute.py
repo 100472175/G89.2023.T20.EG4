@@ -1,7 +1,7 @@
 """Module for validating a ean13 code"""
 import re
 from uc3m_logistics.order_management_exception import OrderManagementException
-from .attribute import Attribute
+from uc3m_logistics.attributes.attribute import Attribute
 
 
 class ProductIdAttribute(Attribute):
@@ -9,6 +9,7 @@ class ProductIdAttribute(Attribute):
     def __init__(self):
         pass
 
+    # pylint: disable=arguments-renamed
     def validate(self, ean13):
         """method vor validating a ean13 code"""
         # PLEASE INCLUDE HERE THE CODE FOR VALIDATING THE EAN13

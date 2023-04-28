@@ -1,11 +1,13 @@
 """This module contains the ZipCodeAttribute class"""
 from uc3m_logistics.order_management_exception import OrderManagementException
-from .attribute import Attribute
+from uc3m_logistics.attributes.attribute import Attribute
 
 class ZipCodeAttribute(Attribute):
     """Class for validating a zip_code"""
     def __init__(self):
         pass
+
+    # pylint: disable=arguments-renamed
     def validate(self, zip_code):
         """method for validating a zip_code"""
         if zip_code.isnumeric() and len(zip_code) == 5:

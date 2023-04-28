@@ -1,12 +1,14 @@
 """This module contains the PhoneNumberAttribute class"""
 import re
 from uc3m_logistics.order_management_exception import OrderManagementException
-from .attribute import Attribute
+from uc3m_logistics.attributes.attribute import Attribute
 
 class PhoneNumberAttribute(Attribute):
     """Class for validating a phone_number"""
     def __init__(self):
         pass
+
+    # pylint: disable=arguments-renamed
     def validate(self, phone_number):
         """method for validating a phone_number"""
         my_phone_number_re = re.compile(r"^(\+)[0-9]{11}")

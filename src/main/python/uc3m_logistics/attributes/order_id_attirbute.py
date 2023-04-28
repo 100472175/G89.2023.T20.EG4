@@ -1,12 +1,14 @@
 """This module contains the ZipCodeAttribute class"""
 import re
 from uc3m_logistics.order_management_exception import OrderManagementException
-from .attribute import Attribute
+from uc3m_logistics.attributes.attribute import Attribute
+
 
 class OrderIdAttribute(Attribute):
     """Class for validating a zip_code"""
-    def __init__(self):
-        pass
+
+
+    # pylint: disable=arguments-renamed
     def validate(self, orderid):
         """Method for checking the order_id format"""
         try:
