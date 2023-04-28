@@ -4,21 +4,19 @@ from uc3m_logistics.order_manager_config import JSON_FILES_PATH
 from uc3m_logistics.stores.jsons_store import JsonStore
 
 
-class OrderDeliveryStore():
+class OrderDeliveryStore:
     """This class is a singleton that represents the store of the orders delivered"""
     class __OrderDeliveryStore(JsonStore):
         _FILE_PATH = JSON_FILES_PATH + "shipments_delivered.json"
 
         def add_item(self, new_item):
             """Method for adding an item"""
-            self.data = self.load()
-            order_delivered = {"_OrderDelivery":str(new_item),"Datetime":str(datetime.utcnow())}
+            order_delivered = {"_OrderDelivery": str(new_item), "Datetime": str(datetime.utcnow())}
             self.data.append(order_delivered)
             self.save()
 
         def find_item_by_key(self, key):
             """Necessary for the abstract class"""
-            pass
 
     instance = None
 

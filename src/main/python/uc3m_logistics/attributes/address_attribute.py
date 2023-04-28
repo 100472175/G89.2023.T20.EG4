@@ -2,18 +2,19 @@
 import re
 from uc3m_logistics.order_management_exception import OrderManagementException
 from uc3m_logistics.attributes.attribute import Attribute
+from uc3m_logistics.exception_messages import ExceptionMessage
 
 
 class AddressAttribute(Attribute):
     """Class for validating a address"""
     def __init__(self):
-        pass
+        self._value = None
 
     def validate(self, value):
         """method for validating a address"""
         my_address_re = re.compile(r"^(?=^.{20,100}$)(([a-zA-Z0-9]+\s)+[a-zA-Z0-9]+)$")
         if not my_address_re.fullmatch(value):
-            raise OrderManagementException("address is not valid")
+            raise OrderManagementException(ExceptionMessage.ADDRESS_NOT_VALID.value)
         return value
 
     @property

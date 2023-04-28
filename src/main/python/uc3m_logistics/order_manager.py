@@ -9,7 +9,7 @@ from uc3m_logistics.order_delivery import OrderDelivery
 class OrderManager:
     """Class for providing the methods for managing the orders process"""
 
-    class __OrderManager():
+    class __OrderManager:
         def __init__(self):
             pass
 

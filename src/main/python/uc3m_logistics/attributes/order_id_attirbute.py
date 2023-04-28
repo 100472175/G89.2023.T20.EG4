@@ -2,11 +2,12 @@
 import re
 from uc3m_logistics.order_management_exception import OrderManagementException
 from uc3m_logistics.attributes.attribute import Attribute
-
+from uc3m_logistics.exception_messages import ExceptionMessage
 
 class OrderIdAttribute(Attribute):
-    """Class for validating a zip_code"""
-
+    """Class for validating the order_id"""
+    def __init__(self):
+        self._value = None
 
     # pylint: disable=arguments-renamed
     def validate(self, orderid):
@@ -14,9 +15,9 @@ class OrderIdAttribute(Attribute):
         try:
             my_order_id_re = re.compile(r"[0-9a-fA-F]{32}$")
             if not my_order_id_re.fullmatch(orderid):
-                raise OrderManagementException("order id is not valid")
+                raise OrderManagementException(ExceptionMessage.ORDER_ID_NOT_VALID.value)
         except KeyError as ex:
-            raise OrderManagementException("Bad label") from ex
+            raise OrderManagementException(ExceptionMessage.BAD_LABEL.value) from ex
         return orderid
 
     @property

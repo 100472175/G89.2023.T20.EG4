@@ -8,7 +8,7 @@ from uc3m_logistics.attributes.zip_code_attribute import ZipCodeAttribute
 from uc3m_logistics.attributes.phone_number_attribute import PhoneNumberAttribute
 from uc3m_logistics.attributes.product_id_attribute import ProductIdAttribute
 from uc3m_logistics.attributes.address_attribute import AddressAttribute
-#from uc3m_logistics.stores.order_request_store import OrderRequestStore
+
 
 class OrderRequest:
     """Class representing the register of the order in the system"""

@@ -5,9 +5,10 @@ from uc3m_logistics.order_manager_config import JSON_FILES_PATH
 from uc3m_logistics.order_management_exception import OrderManagementException
 from uc3m_logistics.stores.jsons_store import JsonStore
 from uc3m_logistics.order_request import OrderRequest
+from uc3m_logistics.exception_messages import ExceptionMessage
 
 
-class OrderRequestStore():
+class OrderRequestStore:
     """Class in charge of order_resuests' data management"""
     class __OrderRequestStore(JsonStore):
         _FILE_PATH = JSON_FILES_PATH + "orders_store.json"
@@ -35,9 +36,9 @@ class OrderRequestStore():
                                          phone_number=phone,
                                          zip_code=zip_code)
                 if order.order_id != key:
-                    raise OrderManagementException("Orders' data have been manipulated")
+                    raise OrderManagementException(ExceptionMessage.ORDERS_DATA_MANIPULATED.value)
                 return proid, reg_type
-            raise OrderManagementException("order_id not found")
+            raise OrderManagementException(ExceptionMessage.ORDER_ID_NOT_FOUND.value)
 
         def add_item(self, new_item):
             self.data = self.load()
@@ -48,7 +49,7 @@ class OrderRequestStore():
             if not found:
                 self.data.append(new_item.__dict__)
             else:
-                raise OrderManagementException("order_id is already registered in orders_store")
+                raise OrderManagementException(ExceptionMessage.ORDER_ID_ALREADY_REGISTERED.value)
             self.save()
 
     instance = None
