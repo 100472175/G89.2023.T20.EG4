@@ -2,6 +2,7 @@
 import re
 from uc3m_logistics.order_management_exception import OrderManagementException
 from uc3m_logistics.attributes.attribute import Attribute
+from uc3m_logistics.exception_messages import ExceptionMessage
 
 class PhoneNumberAttribute(Attribute):
     """Class for validating a phone_number"""
@@ -13,7 +14,7 @@ class PhoneNumberAttribute(Attribute):
         """method for validating a phone_number"""
         my_phone_number_re = re.compile(r"^(\+)[0-9]{11}")
         if not my_phone_number_re.fullmatch(phone_number):
-            raise OrderManagementException("phone number is not valid")
+            raise OrderManagementException(ExceptionMessage.PHONE_NUMBER_NOT_VALID.value)
         return phone_number
 
     @property

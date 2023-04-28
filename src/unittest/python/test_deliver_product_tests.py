@@ -28,14 +28,12 @@ class TestDeliverProduct(TestCase):
         my_manager = OrderManager()
         # add an order in the store
         file_test = JSON_FILES_RF2_PATH + "valid.json"
-        try:
-            my_manager.register_order(product_id="8421691423220",
-                                      address="calle con20chars1esp",
-                                      order_type="Regular",
-                                      phone_number="+34123456789",
-                                      zip_code="01000")
-        except Exception:
-            pass
+        my_manager.register_order(product_id="8421691423220",
+                                  address="calle con20chars1esp",
+                                  order_type="Regular",
+                                  phone_number="+34123456789",
+                                  zip_code="01000")
+
         my_manager.send_product(file_test)
 
 

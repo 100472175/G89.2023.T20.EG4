@@ -7,9 +7,11 @@ from uc3m_logistics.stores.order_shipping_store import OrderShippingStore
 from uc3m_logistics.order_management_exception import OrderManagementException
 from uc3m_logistics.send_product_input import SendProductInput
 from uc3m_logistics.stores.order_request_store import OrderRequestStore
+from uc3m_logistics.exception_messages import ExceptionMessage
+
 
 # pylint: disable=too-many-instance-attributes
-class OrderShipping():
+class OrderShipping:
     """Class representing the shipping of an order"""
 
     def __init__(self, product_id, order_id, delivery_email, order_type):
@@ -24,8 +26,8 @@ class OrderShipping():
             delivery_days = 7
         else:
             delivery_days = 1
-        # timestamp is represneted in seconds.microseconds
-        # __delivery_day must be expressed in senconds to be added to the timestap
+        # timestamp is represented in seconds.microseconds
+        # __delivery_day must be expressed in seconds to be added to the timestamp
         self.__delivery_day = self.__issued_at + (delivery_days * 24 * 60 * 60)
         self.__tracking_code = hashlib.sha256(self.__signature_string().encode()).hexdigest()
 
@@ -39,13 +41,12 @@ class OrderShipping():
         """Saves the order shipping to the store"""
         OrderShippingStore().add_item(self)
 
-
-    def from_tracking_code(self,tracking_code:str):
+    def from_tracking_code(self, tracking_code: str):
         """Returns the order shipping from the tracking_code"""
         TrackingCodeAttribute().validate(tracking_code)
         order_shipping = OrderShippingStore().find_item_by_key(tracking_code)
         if not order_shipping:
-            raise OrderManagementException("tracking_code is not found")
+            raise OrderManagementException(ExceptionMessage.TRACKING_CODE_NOT_FOUND.value)
         return order_shipping
 
     @classmethod
@@ -77,7 +78,7 @@ class OrderShipping():
 
     @order_id.setter
     def order_id(self, value):
-        self.__order_id =value
+        self.__order_id = value
 
     @property
     def email(self):

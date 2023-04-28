@@ -2,18 +2,19 @@
 import re
 from uc3m_logistics.attributes.attribute import Attribute
 from uc3m_logistics.order_management_exception import OrderManagementException
+from uc3m_logistics.exception_messages import ExceptionMessage
 
 
 class OrderTypeAttribute(Attribute):
     """Class for validating a order_type"""
     def __init__(self):
-        pass
+        self._value = None
 
     def validate(self, value):
         """method for validating a order_type"""
         my_order_type_re = re.compile(r"(Regular|Premium)")
         if not my_order_type_re.fullmatch(value):
-            raise OrderManagementException("order_type is not valid")
+            raise OrderManagementException(ExceptionMessage.ORDER_TYPE_NOT_VALID.value)
         return value
 
     @property

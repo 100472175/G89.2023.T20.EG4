@@ -2,10 +2,12 @@
 import json
 from uc3m_logistics.attributes.email_attribute import EmailAttribute
 from uc3m_logistics.attributes.order_id_attirbute import OrderIdAttribute
+from uc3m_logistics.exception_messages import ExceptionMessage
 from .order_management_exception import OrderManagementException
 
 
-class SendProductInput():
+
+class SendProductInput:
     """Abstract class for validating attributes"""
 
     def __init__(self, email, order_id):
@@ -37,9 +39,9 @@ class SendProductInput():
             with open(file_path, "r", encoding="utf-8", newline="") as json_file:
                 data = json.load(json_file)
         except FileNotFoundError as exception:
-            raise OrderManagementException("File not found") from exception
+            raise OrderManagementException(ExceptionMessage.FILE_NOT_FOUND.value) from exception
         except json.JSONDecodeError as exception:
-            raise OrderManagementException("JSON Decode Error - Wrong JSON Format") from exception
+            raise OrderManagementException(ExceptionMessage.JSON_DECODE_ERROR.value) from exception
         if "OrderID" not in data or "ContactEmail" not in data:
-            raise OrderManagementException("Bad label")
+            raise OrderManagementException(ExceptionMessage.BAD_LABEL.value)
         return data

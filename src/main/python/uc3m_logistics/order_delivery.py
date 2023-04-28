@@ -5,7 +5,7 @@ from uc3m_logistics.stores.order_shipping_store import OrderShippingStore
 
 
 # pylint: disable=too-many-instance-attributes
-class OrderDelivery():
+class OrderDelivery:
     """Class representing the shipping of an order"""
 
     def __init__(self, tracking_code):

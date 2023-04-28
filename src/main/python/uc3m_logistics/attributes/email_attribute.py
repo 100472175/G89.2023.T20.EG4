@@ -2,11 +2,14 @@
 import re
 from uc3m_logistics.order_management_exception import OrderManagementException
 from uc3m_logistics.attributes.attribute import Attribute
+from uc3m_logistics.exception_messages import ExceptionMessage
+
 
 class EmailAttribute(Attribute):
-    """Class for validating a zip_code"""
+    """Class for validating a email"""
     def __init__(self):
-        pass
+        self._value = None
+
     # pylint: disable=arguments-renamed
     def validate(self, email):
         """Method for checking the email format"""
@@ -14,7 +17,7 @@ class EmailAttribute(Attribute):
             regex_email = r'^[a-z0-9]+([\._]?[a-z0-9]+)+[@](\w+[.])+\w{2,3}$'
             my_email_re = re.compile(regex_email)
             if not my_email_re.fullmatch(email):
-                raise OrderManagementException("contact email is not valid")
+                raise OrderManagementException(ExceptionMessage.EMAIL_NOT_VALID.value)
             return email
         except KeyError as ex:
             raise OrderManagementException("Bad label") from ex
