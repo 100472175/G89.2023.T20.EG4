@@ -7,7 +7,6 @@ from uc3m_logistics.order_management_exception import OrderManagementException
 class JsonStore(ABC):
     """Class for reading and writing json files"""
     _FILE_PATH = ""
-
     def __init__(self):
         self.__data = self.load()
 
@@ -46,3 +45,7 @@ class JsonStore(ABC):
     def data(self):
         """Getter for data"""
         return self.__data
+    @data.setter
+    def data(self, value):
+        self.__data = value
+        self.save()

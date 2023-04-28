@@ -13,6 +13,7 @@ class OrderRequestStore():
         _FILE_PATH = JSON_FILES_PATH + "orders_store.json"
 
         def find_item_by_key(self, key: str):
+            self.data = self.load()
             found_item = False
             item = None
             for order in self.data:
@@ -39,6 +40,7 @@ class OrderRequestStore():
             raise OrderManagementException("order_id not found")
 
         def add_item(self, new_item):
+            self.data = self.load()
             found = False
             for item in self.data:
                 if item["_OrderRequest__order_id"] == new_item.order_id:

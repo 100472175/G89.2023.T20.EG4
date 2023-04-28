@@ -9,6 +9,7 @@ class OrderShippingStore():
     class __OrderShippingStore(JsonStore):
         _FILE_PATH = JSON_FILES_PATH + "shipments_store.json"
         def find_item_by_key(self, key):
+            self.data = self.load()
             found = False
             del_timestamp = False
             for item in self.data:
@@ -24,6 +25,7 @@ class OrderShippingStore():
                 raise OrderManagementException("Today is not the delivery date")
             #return del_timestamp
         def add_item(self,new_item):
+            self.data = self.load()
             self.data.append(new_item.__dict__)
             self.save()
     instance = None
