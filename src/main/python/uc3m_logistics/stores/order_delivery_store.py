@@ -11,8 +11,8 @@ class OrderDeliveryStore():
 
         def add_item(self, new_item):
             """Method for adding an item"""
-            self.data.append(str(new_item))
-            self.data.append(str(datetime.utcnow()))
+            order_delivered = {"_OrderDelivery":str(new_item),"Datetime":str(datetime.utcnow())}
+            self.data.append(order_delivered)
             self.save()
 
         def find_item_by_key(self, key):
